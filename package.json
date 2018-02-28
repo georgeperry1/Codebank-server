@@ -1,0 +1,19 @@
+{
+  "name": "codebank-server",
+  "version": "1.0.0",
+  "description": "Codebank server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/georgeperry1/Codebank-server.git"
+  },
+  "author": "George Perry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/georgeperry1/Codebank-server/issues"
+  },
+  "homepage": "https://github.com/georgeperry1/Codebank-server#readme"
+}
