@@ -23,3 +23,5 @@ const routes = () => {
   router.post('/sign-up', userController.signUp);
 
 }
+
+module.exports = routes;

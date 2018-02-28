@@ -1,11 +1,12 @@
 'use strict';
 
-//Init server
+// Init server
 const koa = require('koa');
 const app = module.exports = new koa();
 
-//Dependencies
+// Dependencies
 const bodyParser = require('koa-bodyparser');
+const compress = require('koa-compress');
 const cors = require('kcors');
 const logger = require('koa-logger');
 const path = require('path');
@@ -16,3 +17,19 @@ const serve = require('koa-static');
 app.use(logger());
 app.use(cors());
 app.use(bodyParser());
+
+// Add routes
+routes(app);
+
+// Serve static files
+app.use(serve(path.join(__dirname, 'public')));
+
+// Compress
+app.use(compress());
+
+// Run server
+if (!module.parent) {
+  const port = process.env.PORT || 3000;
+  app.listen(port);
+  console.log('Server is listening on port:', port);
+}
