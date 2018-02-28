@@ -17,6 +17,7 @@ const serve = require('koa-static');
 app.use(logger());
 app.use(cors());
 app.use(bodyParser());
+require('./db');
 
 // Add routes
 routes(app);

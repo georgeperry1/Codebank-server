@@ -1,17 +1,17 @@
 'user strict';
 
-const db = require('../mock.json');
+const Vault = require('../model')
 
 //Home page
 module.exports.home = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
-    console.log('Great success in home controller');
+    console.log('Great success in the home controller');
     ctx.status = 200;
   }
   catch (error) {
     if (error) {
-      console.log('Error in home controller:', error);
+      console.log('Error in the home controller:', error);
       ctx.status = error.response.status;
       ctx.body = error.response.data;
     }
@@ -22,13 +22,19 @@ module.exports.home = async (ctx, next) => {
 module.exports.vaults = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
-
+    Vault.find()
+    .then(vaults => {
+      console.log('VAULTS:', vaults);
+      ctx.body = vaults;
+      ctx.status = 200;
+      console.log('Great success in the vaults controller');
+    });
   }
   catch (error) {
-    console.log('Error in vaults controller:', error);
     if (error) {
       ctx.status = error.response.status;
       ctx.body = error.response.data;
+      console.log('Error in vaults controller:', ctx.status);
     }
   }
 };
