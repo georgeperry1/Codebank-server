@@ -9,13 +9,13 @@ const VaultSchema = new Schema({
   name: String,
   url: String,
   description: String,
-  crypts: Array
+  crypts: [{type: Schema.Types.ObjectId, ref: 'Crypt'}]
 });
 
 //Crypt Schema
 const CryptSchema = new Schema({
   name: String,
-  gems: Array
+  gems: [{type: Schema.Types.ObjectId, ref: 'Gem'}]
 });
 
 //Gem Schema

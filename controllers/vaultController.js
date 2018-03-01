@@ -1,9 +1,7 @@
 'user strict';
 
 //Get Schema:
-const Schema = require('../model');
-//const Crypt = require('../model');
-
+const { Vault, Crypt, Gem } = require('../model');
 
 //Home page
 module.exports.home = async (ctx, next) => {
@@ -47,12 +45,10 @@ module.exports.showVault = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
     const id = ctx.params.vault_id;
-    let vault = await Vault.findOne({_id: id});
+    const vault = await Vault.findOne({_id: id}).populate('crypts');
     if (vault) {
       ctx.status = 200;
       ctx.body = vault;
-      console.log('VAULT:', vault);
-      console.log('We successfully the vault!');
     } else {
       ctx.status = 404;
       ctx.body = {
@@ -80,23 +76,22 @@ module.exports.createVault = async (ctx, next) => {
       console.log('Please fill in all required fields');
       ctx.status = 400
     }
-    const vault = await Schema.Vault.create({
+    
+    const vault = await Vault.create({
       name: ctx.request.body.name,
       url: ctx.request.body.url,
-      description: ctx.request.body.description,
-      crypts: ctx.request.body.crypts
-    })
-    console.log('NEW VAULT:', vault);
-    const crypts = await vault.crypts.map(crypt => {
-      Schema.Crypt.create({
-        name: crypt,
-        gems: []
-      })
-    })
-    console.log('NEW CRYPTS:', crypts);
+      description: ctx.request.body.description
+    });
+
+    const promises = ctx.request.body.crypts.map(crypt => Crypt.create({
+      name: crypt
+    }));
+
+    const crypts = await Promise.all(promises);
+    vault.crypts = crypts.map(crypt => crypt._id);
+    await vault.save();
     ctx.body = [vault, crypts];
     ctx.status = 201;
-    console.log('Great success in the createVaults controller');
   }
   catch (error) {
     if (error) {
