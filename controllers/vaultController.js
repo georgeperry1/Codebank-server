@@ -1,7 +1,9 @@
 'user strict';
 
 //Get Schema:
-const Vault = require('../model')
+const Schema = require('../model');
+//const Crypt = require('../model');
+
 
 //Home page
 module.exports.home = async (ctx, next) => {
@@ -43,7 +45,6 @@ module.exports.vaults = async (ctx, next) => {
 //Show a selected vault
 module.exports.showVault = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
-  console.log(ctx.params);
   try {
     const id = ctx.params.vault_id;
     let vault = await Vault.findOne({_id: id});
@@ -79,14 +80,21 @@ module.exports.createVault = async (ctx, next) => {
       console.log('Please fill in all required fields');
       ctx.status = 400
     }
-    const vault = await Vault.create({
+    const vault = await Schema.Vault.create({
       name: ctx.request.body.name,
       url: ctx.request.body.url,
       description: ctx.request.body.description,
       crypts: ctx.request.body.crypts
     })
     console.log('NEW VAULT:', vault);
-    ctx.body = vault;
+    const crypts = await vault.crypts.map(crypt => {
+      Schema.Crypt.create({
+        name: crypt,
+        gems: []
+      })
+    })
+    console.log('NEW CRYPTS:', crypts);
+    ctx.body = [vault, crypts];
     ctx.status = 201;
     console.log('Great success in the createVaults controller');
   }

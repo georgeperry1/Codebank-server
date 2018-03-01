@@ -1,14 +1,14 @@
 'user strict';
 
 //Get Schema:
-const Crypt = require('../model');
-const Gem = require('../model')
+const Schema = require('../model'); //USE: Schema.Crypt & Schema.Gem
 
 //Show a selected crypt
 module.exports.showCrypt = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
-
+    const id = ctx.params.crypt_id;
+    let crypt = await Crypt.findOne({_id: id});
   }
   catch (error) {
     if (error) {

@@ -26,12 +26,12 @@ const GemSchema = new Schema({
   votes: Number
 });
 
-const Vault = mongoose.model('Vault', VaultSchema);
-const Crypt = mongoose.model('Crypt', CryptSchema);
-const Gem = mongoose.model('Gem', GemSchema);
+module.exports.Vault = mongoose.model('Vault', VaultSchema);
+module.exports.Crypt = mongoose.model('Crypt', CryptSchema);
+module.exports.Gem = mongoose.model('Gem', GemSchema);
 
-module.exports = {
-  Vault: Vault,
-  Crypt: Crypt,
-  Gem: Gem
-}
+// module.exports = {
+//   Vault: Vault,
+//   Crypt: Crypt,
+//   Gem: Gem
+// }
