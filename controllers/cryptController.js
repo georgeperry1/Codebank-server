@@ -7,8 +7,7 @@ const { Vault, Crypt, Gem } = require('../model');
 module.exports.showCrypt = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
-    console.log('Vault ID:', ctx.params.vault_id);
-    console.log('Crypt ID:', ctx.params.crypt_id);
+    //Find crypt in DB and return
     const id = ctx.params.crypt_id;
     const crypt = await Crypt.findOne({_id: id}).populate('gems');
     if (crypt) {
@@ -37,7 +36,21 @@ module.exports.showCrypt = async (ctx, next) => {
 module.exports.showGem = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
-
+    const id = ctx.params.gem_id;
+    const gem = await Gem.findOne({_id: id});
+    console.log(gem);
+    if (gem) {
+      ctx.status = 200;
+      ctx.body = gem;
+    } else {
+      ctx.status = 404;
+      ctx.body = {
+        Error:[
+          'Vault does not exist'
+        ]
+      }
+      console.log('Sorry, gem does not exist');
+    }
   }
   catch (error) {
     if (error) {
