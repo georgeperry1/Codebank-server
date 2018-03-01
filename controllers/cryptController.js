@@ -36,6 +36,7 @@ module.exports.showCrypt = async (ctx, next) => {
 module.exports.showGem = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
+    //Find gem in DB and return
     const id = ctx.params.gem_id;
     const gem = await Gem.findOne({_id: id});
     console.log(gem);
@@ -102,7 +103,24 @@ module.exports.createGem = async (ctx, next) => {
 module.exports.voteUp = async (ctx, next) => {
   if ('PUT' != ctx.method) return await next();
   try {
-
+    //Find gem in DB and add 1 to the votes
+    const id = ctx.params.gem_id;
+    const gem = await Gem.findOneAndUpdate({
+      _id: id
+    }, {
+      $inc: { votes: 1 }
+    }, {
+      new: true
+    });
+    console.log(gem);
+    if (!gem) {
+      ctx.status = 404;
+      ctx.body = {
+        Error:[
+          'Vault does not exist'
+        ]
+      }
+    }
   }
   catch (error) {
     if (error) {
@@ -117,7 +135,24 @@ module.exports.voteUp = async (ctx, next) => {
 module.exports.voteDown = async (ctx, next) => {
   if ('PUT' != ctx.method) return await next();
   try {
-
+    //Find gem in DB and subtract 1 to the votes
+    const id = ctx.params.gem_id;
+    const gem = await Gem.findOneAndUpdate({
+      _id: id
+    }, {
+      $inc: { votes: -1 }
+    }, {
+      new: true
+    });
+    console.log(gem);
+    if (!gem) {
+      ctx.status = 404;
+      ctx.body = {
+        Error:[
+          'Vault does not exist'
+        ]
+      }
+    }
   }
   catch (error) {
     if (error) {

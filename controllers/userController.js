@@ -1,7 +1,5 @@
 'user strict';
 
-const db = require('../mock.json');
-
 //Add authorize function here
 
 //Profile page

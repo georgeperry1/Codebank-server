@@ -23,6 +23,7 @@ module.exports.home = async (ctx, next) => {
 module.exports.vaults = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
+    //Find all vaults in the DB and return in body
     Vault.find()
     .then(vaults => {
       console.log('VAULTS:', vaults);
@@ -44,6 +45,7 @@ module.exports.vaults = async (ctx, next) => {
 module.exports.showVault = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
+    //Find vault in DB and return
     const id = ctx.params.vault_id;
     const vault = await Vault.findOne({_id: id}).populate('crypts');
     if (vault) {
@@ -76,12 +78,14 @@ module.exports.createVault = async (ctx, next) => {
       console.log('Please fill in all required fields');
       ctx.status = 400
     }
+
     //Create new vault
     const vault = await Vault.create({
       name: ctx.request.body.name,
       url: ctx.request.body.url,
       description: ctx.request.body.description
     });
+
     //Create new crypts
     const promises = ctx.request.body.crypts.map(crypt => Crypt.create({
       name: crypt
@@ -91,7 +95,7 @@ module.exports.createVault = async (ctx, next) => {
     const crypts = await Promise.all(promises);
     vault.crypts = crypts.map(crypt => crypt._id);
     await vault.save();
-    
+
     //Return vault and crypts
     ctx.body = [vault, crypts];
     ctx.status = 201;
