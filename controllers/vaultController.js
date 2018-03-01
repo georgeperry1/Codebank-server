@@ -76,20 +76,23 @@ module.exports.createVault = async (ctx, next) => {
       console.log('Please fill in all required fields');
       ctx.status = 400
     }
-    
+    //Create new vault
     const vault = await Vault.create({
       name: ctx.request.body.name,
       url: ctx.request.body.url,
       description: ctx.request.body.description
     });
-
+    //Create new crypts
     const promises = ctx.request.body.crypts.map(crypt => Crypt.create({
       name: crypt
     }));
 
+    //Add reference to vault
     const crypts = await Promise.all(promises);
     vault.crypts = crypts.map(crypt => crypt._id);
     await vault.save();
+    
+    //Return vault and crypts
     ctx.body = [vault, crypts];
     ctx.status = 201;
   }
