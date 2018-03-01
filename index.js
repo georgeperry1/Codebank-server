@@ -5,7 +5,7 @@ const koa = require('koa');
 const app = module.exports = new koa();
 
 // Dependencies
-const bodyParser = require('koa-bodyparser');
+const bodyParser = require('koa-body');
 const compress = require('koa-compress');
 const cors = require('kcors');
 const logger = require('koa-logger');
@@ -16,7 +16,9 @@ const serve = require('koa-static');
 // Middleware
 app.use(logger());
 app.use(cors());
-app.use(bodyParser());
+app.use(bodyParser({
+  multipart:true
+}));
 require('./db');
 
 // Add routes
