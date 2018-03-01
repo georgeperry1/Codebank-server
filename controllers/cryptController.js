@@ -1,7 +1,8 @@
 'user strict';
 
-//FIX:
-const Vault = require('../model')
+//Get Schema:
+const Crypt = require('../model');
+const Gem = require('../model')
 
 //Show a selected crypt
 module.exports.showCrypt = async (ctx, next) => {

@@ -5,23 +5,33 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 //Vault Schema
-const Vault = new Schema({
+const VaultSchema = new Schema({
   name: String,
   url: String,
-  description: String
+  description: String,
+  crypts: Array
+});
+
+//Crypt Schema
+const CryptSchema = new Schema({
+  name: String,
+  gems: Array
 });
 
 //Gem Schema
-// const GemSchema = new Schema({
-//   title: String,
-//   url: String,
-//   type: String
-// });
+const GemSchema = new Schema({
+  title: String,
+  url: String,
+  type: String,
+  votes: Number
+});
 
-module.exports = mongoose.model('Vault', Vault);
-//const Gem = mongoose.model('Gem', GemSchema);
+const Vault = mongoose.model('Vault', VaultSchema);
+const Crypt = mongoose.model('Crypt', CryptSchema);
+const Gem = mongoose.model('Gem', GemSchema);
 
-// module.exports = {
-//   Vault: Vault,
-//   Gem: Gem
-// }
+module.exports = {
+  Vault: Vault,
+  Crypt: Crypt,
+  Gem: Gem
+}
