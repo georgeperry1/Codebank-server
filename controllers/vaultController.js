@@ -24,13 +24,10 @@ module.exports.vaults = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();
   try {
     //Find all vaults in the DB and return in body
-    Vault.find()
-    .then(vaults => {
-      console.log('VAULTS:', vaults);
-      ctx.body = vaults;
-      ctx.status = 200;
-      console.log('Great success in the vaults controller');
-    });
+    const vaults = await Vault.find()
+    ctx.body = vaults;
+    ctx.status = 200;
+    console.log('Great success in the vaults controller');
   }
   catch (error) {
     if (error) {
