@@ -12,6 +12,7 @@ const logger = require('koa-logger');
 const path = require('path');
 const routes = require('./routes.js');
 const serve = require('koa-static');
+require('./db');
 
 // Middleware
 app.use(logger());
@@ -19,7 +20,6 @@ app.use(cors());
 app.use(bodyParser({
   multipart:true
 }));
-require('./db');
 
 // Add routes
 routes(app);

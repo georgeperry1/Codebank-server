@@ -27,7 +27,6 @@ module.exports.vaults = async (ctx, next) => {
     const vaults = await Vault.find()
     ctx.body = vaults;
     ctx.status = 200;
-    console.log('Great success in the vaults controller');
   }
   catch (error) {
     if (error) {
@@ -67,24 +66,29 @@ module.exports.showVault = async (ctx, next) => {
   }
 };
 
+const cleanBody = body => {
+  return typeof body !== 'object' ? JSON.parse(body) : body;
+};
+
 //Create a vault
 module.exports.createVault = async (ctx, next) => {
   if ('POST' != ctx.method) return await next();
   try {
     if (!ctx.request.body.name) {
-      console.log('Please fill in all required fields');
-      ctx.status = 400
+      ctx.status = 404
     }
+    //Parse body
+    const data = cleanBody(ctx.request.body);
 
     //Create new vault
     const vault = await Vault.create({
-      name: ctx.request.body.name,
-      url: ctx.request.body.url,
-      description: ctx.request.body.description
+      name: data.name,
+      url: data.url,
+      description: data.description
     });
 
     //Create new crypts
-    const promises = ctx.request.body.crypts.map(crypt => Crypt.create({
+    const promises = await data.crypts.map(crypt => Crypt.create({
       name: crypt
     }));
 
