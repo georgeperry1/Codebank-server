@@ -98,7 +98,7 @@ module.exports.createVault = async (ctx, next) => {
     await vault.save();
 
     //Return vault and crypts
-    ctx.body = [vault, crypts];
+    ctx.body = vault;
     ctx.status = 201;
   }
   catch (error) {

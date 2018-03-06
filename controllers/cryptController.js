@@ -3,6 +3,49 @@
 //Get Schema:
 const { Vault, Crypt, Gem } = require('../model');
 
+const cleanBody = body => {
+  return typeof body !== 'object' ? JSON.parse(body) : body;
+};
+
+//Creat a new crypt
+module.exports.createCrypt = async (ctx, next) => {
+  if ('POST' != ctx.method) return await next();
+  try {
+    if (!ctx.request.body.name) {
+      ctx.status = 404
+    }
+
+    //Parse body
+    const data = cleanBody(ctx.request.body);
+    console.log('BODY:', data);
+    //Create new crypt
+    const crypt = await Crypt.create({
+      name: data.name,
+      parentVault: data.parentVault
+    });
+
+    //Add to parent Vault
+    const id = data.parentVault;
+    const vault = await Vault.findOne({_id: id}).populate('crypts');
+    vault.crypts = [...vault.crypts, crypt._id];
+
+    await vault.save();
+    await crypt.save();
+
+    //Return Crypt
+    ctx.body = crypt;
+    ctx.status = 201;
+
+  }
+  catch (error) {
+    if (error) {
+      console.log('Error in createCrypt controller:', error);
+      ctx.status = error.response.status;
+      ctx.body = error.response.data;
+    }
+  }
+}
+
 //Show a selected crypt
 module.exports.showCrypt = async (ctx, next) => {
   if ('GET' != ctx.method) return await next();

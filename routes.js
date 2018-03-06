@@ -15,6 +15,7 @@ const routes = function (app) {
   router.post('/vaults/create', vaultController.createVault); //Create a vault
 
   //From cryptController
+  router.post('/vault/:vault_id/create', cryptController.createCrypt); //Create a new Crypt
   router.get('/vault/:vault_id/:crypt_id', cryptController.showCrypt); //Show a selected crypt
   router.get('/vault/:vault_id/:crypt_id/:gem_id', cryptController.showGem) //Show a selected gem
   router.post('/vault/:vault_id/:crypt_id/create', cryptController.createGem); //Create a gem

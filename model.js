@@ -15,6 +15,7 @@ const VaultSchema = new Schema({
 //Crypt Schema
 const CryptSchema = new Schema({
   name: String,
+  parentVault: String,
   gems: [{type: Schema.Types.ObjectId, ref: 'Gem'}]
 });
 
@@ -22,6 +23,7 @@ const CryptSchema = new Schema({
 const GemSchema = new Schema({
   title: String,
   url: String,
+  parentCrypt: String,
   type: String,
   votes: Number
 });
@@ -29,9 +31,3 @@ const GemSchema = new Schema({
 module.exports.Vault = mongoose.model('Vault', VaultSchema);
 module.exports.Crypt = mongoose.model('Crypt', CryptSchema);
 module.exports.Gem = mongoose.model('Gem', GemSchema);
-
-// module.exports = {
-//   Vault: Vault,
-//   Crypt: Crypt,
-//   Gem: Gem
-// }
