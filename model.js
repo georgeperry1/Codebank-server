@@ -23,9 +23,10 @@ const CryptSchema = new Schema({
 const GemSchema = new Schema({
   title: String,
   url: String,
+  parentVault: String,
   parentCrypt: String,
   type: String,
-  votes: Number
+  votes: {type: Number, default: 0}
 });
 
 module.exports.Vault = mongoose.model('Vault', VaultSchema);

@@ -25,7 +25,11 @@ module.exports.vaults = async (ctx, next) => {
   try {
     //Find all vaults in the DB and return in body
     const vaults = await Vault.find()
-    ctx.body = vaults;
+
+    //FInd all crypts too
+    const crypts = await Crypt.find()
+
+    ctx.body = {vaults: vaults, crypts: crypts};
     ctx.status = 200;
   }
   catch (error) {

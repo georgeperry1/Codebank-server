@@ -82,7 +82,6 @@ module.exports.showGem = async (ctx, next) => {
     //Find gem in DB and return
     const id = ctx.params.gem_id;
     const gem = await Gem.findOne({_id: id});
-    console.log(gem);
     if (gem) {
       ctx.status = 200;
       ctx.body = gem;
@@ -114,22 +113,29 @@ module.exports.createGem = async (ctx, next) => {
       ctx.status = 400
     }
 
+    //Parse body
+    const data = cleanBody(ctx.request.body);
+    console.log('BODY:', data);
+
     //Create new gem
     const gem = await Gem.create({
-      title: ctx.request.body.title,
-      url: ctx.request.body.url,
-      type: ctx.request.body.type,
-      votes: 0
+      title: data.title,
+      url: data.url,
+      type: data.type,
+      parentVaultId: data.parentVaultId,
+      parentCryptId: data.parentCryptId
     });
 
-    //Store reference in parent crypt
-    const id = ctx.params.crypt_id;
+    //Add to parent Vault
+    const id = data.parentCryptId;
     const crypt = await Crypt.findOne({_id: id}).populate('gems');
-    crypt.gems.push(gem);
-    crypt.gems = crypt.gems.map(gem => gem._id);
+    console.log('CRYPT:', crypt);
+    crypt.gems = [...crypt.gems, gem._id];
+
+    await gem.save();
     await crypt.save();
 
-    //Return gem
+    //Return Crypt
     ctx.body = gem;
     ctx.status = 201;
   }
